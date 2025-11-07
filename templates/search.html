@@ -1,0 +1,97 @@
+<!--
+
+Deliverable: Iteration 1
+Version 1.0
+Date: 02/11/2025
+
+Code presented below is adapted from existing code and aided with ChatGPT 4o see appendix B
+
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Search Products</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Grocery</a>
+      <a class="nav-link text-light" href="{{ url_for('index') }}">Home</a>
+    </div>
+  </nav>
+
+  <!-- search heading -->
+  <div class="container mt-5">
+    <h1 class="mb-4">Search Products</h1>
+
+    <!-- search form -->
+    <form method="get" action="{{ url_for('search') }}" class="mb-4">
+      <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="Enter name" value="{{ query }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    </form>
+
+    <!-- Results -->
+    {% if query %}
+      {% if rows %}
+        <h5 class="mb-4">Results for <strong>{{ query }}</strong></h5>
+        <table class="table table-bordered table-hover mt-3">
+          <thead class="table-dark">
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Price (€)</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+              <tr>
+                <td>
+                  <img src="{{ row.image_url }}" alt="Image" width="80">
+                </td>
+                <td>{{ row.name }}</td>
+              <!-- code below is aided from ChatGPT see appendix A -->
+                <td>
+                    €{{ "%.2f"|format(row.price) }}
+                    {% if row.unit_price and row.unit_type %}
+                        <br>
+                        <small class="text-muted">
+                            ({{ "%.2f"|format(row.unit_price) }} €/{{ row.unit_type }})
+                        </small>
+                    {% endif %}
+                </td>
+              <!-- code above from ChatGPT 4o see appendix A -->
+              <!-- code below adapted from ChatGPT 4o see appendix C -->
+                <td>
+                  {% if row.last_updated %}
+                    <small class="text-muted">
+                      {{ row.last_updated.strftime('%d-%m-%Y') }}
+                    </small>
+                  {% else %}
+                    <small class="text-muted">N/A</small>
+                  {% endif %}
+                </td>
+              <!-- code above adapted from ChatGPT 4o see appendix C -->
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert alert-warning mt-3" role="alert">
+          No products found matching <strong>{{ query }}</strong>.
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+
+</body>
+</html>
+
+<!-- End of code block for iteration 1 deliverable -->

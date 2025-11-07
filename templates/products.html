@@ -1,0 +1,70 @@
+<!--
+
+Deliverable: Iteration 1
+Version 1.0
+Date: 04/11/2025
+
+Code presented below is adapted from IS3312 Project Phase 2 and aided with ChatGPT 4o please see environment deliverable
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Grocery</a>
+      <a class="nav-link text-light" href="{{ url_for('index') }}">Back to home</a>
+    </div>
+  </nav>
+
+  <button type="submit" class="btn btn-warning">Refresh Prices</button>
+
+    <!-- Add product to database-->
+    <form method="POST" action="{{ url_for('products') }}">
+        <input type="text" name="name" placeholder="Enter product name" required>
+        <input type="number" name="price" step="any" placeholder="Enter price" required>
+        <input type="text" name="image_url" placeholder="Image URL" required>
+        <button type="submit">Add</button>
+    </form>
+
+
+
+    <hr>
+
+    <!-- Display products -->
+    {% if products %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price (€)</th>
+                <th>Actions</th>
+            </tr>
+            {% for p in products %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td><img src="{{ p.image_url }}" alt="Image" width="100"></td>
+                <td>{{ p.name }}</td>
+                <td>€{{ p.price }}</td>
+                <td>
+                    <a href="{{ url_for('edit_product', id=p.id) }}">Edit</a>
+                    <form action="{{ url_for('delete_product', id=p.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Delete this product?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+
+</body>
+</html>
+
+<!-- End of code block for iteration 1 deliverable -->

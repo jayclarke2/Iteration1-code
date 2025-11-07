@@ -1,0 +1,43 @@
+<!--
+
+Deliverable: Iteration 1
+Version 1.0
+Date: 01/11/2025
+
+Code presented below is adapted from https://www.w3schools.com/howto/howto_css_login_form.asp
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+  <h2>Welcome to GrocerySavr</h2>
+  <h4> To register, enter a username and password</h4>
+  <h4> click register and sign in or continue as a guest</h4>
+
+  <form method="POST" action="{{ url_for('login') }}">
+    <div>
+      <label for="username"><b>Username</b></label><br>
+      <input type="text" name="username" placeholder="Enter Username" required>
+    </div>
+
+    <div>
+      <label for="password"><b>Password</b></label><br>
+      <input type="password" name="password" placeholder="Enter Password" required>
+    </div>
+
+    <div>
+        <button type="submit" name="action" value="login">Log In</button>
+        <button type="submit" name="action" value="register">Register</button>
+        <button type="submit" name="action" value="guest" formnovalidate>Continue as Guest</button>
+    </div>
+  </form>
+</body>
+</html>
+
+<!-- End of code block for iteration 1 deliverable -->
