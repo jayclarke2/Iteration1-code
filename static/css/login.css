@@ -96,4 +96,34 @@ button:hover {
   opacity: 0.9;
 }
 
-/* end of code block for iteration 1 deliverable */
+.flash-container {
+    margin: 10px auto;
+    width: 80%;
+    max-width: 400px;
+}
+
+.flash {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Flash categories */
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.flash-info {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+/* end of code block for iteration 2 deliverable */

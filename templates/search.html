@@ -1,10 +1,10 @@
 <!--
+Deliverable: Iteration 2
+Version 2.0
+Date: 13/11/2025
 
-Deliverable: Iteration 1
-Version 1.0
-Date: 02/11/2025
-
-Code presented below is adapted from existing code and aided with ChatGPT 4o see appendix B
+Code presented below is adapted from existing code and IS3312 Project Phase 2
+aided with ChatGPT 4o see appendix B iteration 2 report
 
 -->
 <!doctype html>
@@ -19,11 +19,22 @@ Code presented below is adapted from existing code and aided with ChatGPT 4o see
 
   <!-- Navbar -->
   <nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Grocery</a>
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center" style="gap: 15px;">
+      <a class="navbar-brand mb-0">GrocerySaver</a>
       <a class="nav-link text-light" href="{{ url_for('index') }}">Home</a>
     </div>
-  </nav>
+      <div class="d-flex align-items-center" style="gap: 10px;">
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">View Full Basket</a>
+          <!-- User story #10 see a basket total -->
+      <a class="nav-link text-light" href="{{ url_for('basket') }}">
+        Basket (€{{ cart_total }})
+      </a>
+    </div>
+
+  </div>
+</nav>
+
 
   <!-- search heading -->
   <div class="container mt-5">
@@ -37,61 +48,110 @@ Code presented below is adapted from existing code and aided with ChatGPT 4o see
       </div>
     </form>
 
+    <!-- User story #4 - Filter - Code adapted from IS3312 Project Phase 2 -->
+  <form method="get" action="{{ url_for('search') }}" class="row mb-4">
+  <div class="col-md-4">
+    <label class="form-label">Filter by Retailer</label>
+    <select name="retailer" class="form-select" onchange="this.form.submit()">
+      <option value="">Retailers</option>
+      {% for r in retailers %}
+        <option value="{{ r }}" {% if selected_retailer == r %}selected{% endif %}>{{ r }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Filter by Category</label>
+    <select name="category" class="form-select" onchange="this.form.submit()">
+      <option value="">Categories</option>
+      {% for c in categories %}
+        <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- User story #5 - sort by price/unit price aided from ChatGPT see appendix B - Iteration 2 Report -->
+  <div class="col-md-4">
+    <label class="form-label">Sort By</label>
+    <select name="sort" class="form-select" onchange="this.form.submit()">
+      <option value="">Price or Unit Price</option>
+      <option value="price_asc"  {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+      <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+      <option value="unit_asc"   {% if sort == 'unit_asc' %}selected{% endif %}>Unit Price: Low to High</option>
+      <option value="unit_desc"  {% if sort == 'unit_desc' %}selected{% endif %}>Unit Price: High to Low</option>
+    </select>
+  </div>
+</form>
+
     <!-- Results -->
-    {% if query %}
-      {% if rows %}
-        <h5 class="mb-4">Results for <strong>{{ query }}</strong></h5>
-        <table class="table table-bordered table-hover mt-3">
-          <thead class="table-dark">
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Price (€)</th>
-              <th>Last Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in rows %}
-              <tr>
-                <td>
-                  <img src="{{ row.image_url }}" alt="Image" width="80">
-                </td>
-                <td>{{ row.name }}</td>
-              <!-- code below is aided from ChatGPT see appendix A -->
-                <td>
-                    €{{ "%.2f"|format(row.price) }}
-                    {% if row.unit_price and row.unit_type %}
-                        <br>
-                        <small class="text-muted">
-                            ({{ "%.2f"|format(row.unit_price) }} €/{{ row.unit_type }})
-                        </small>
-                    {% endif %}
-                </td>
-              <!-- code above from ChatGPT 4o see appendix A -->
-              <!-- code below adapted from ChatGPT 4o see appendix C -->
-                <td>
-                  {% if row.last_updated %}
-                    <small class="text-muted">
-                      {{ row.last_updated.strftime('%d-%m-%Y') }}
-                    </small>
-                  {% else %}
-                    <small class="text-muted">N/A</small>
+{% if rows %}
+    <table class="table table-bordered table-hover mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Retailer</th>
+          <th>Category</th>
+          <th>Price (€)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      {% for row in rows %}
+          <tr>
+              <td><img src="{{ row.image_url }}" alt="Image" width="80"></td>
+              <td>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                          <strong>{{ row.name }}</strong><br>
+                          <!-- user story #7 - see the store region -->
+                          <small class="text-muted">{{ row.region }}</small>
+                      </div>
+
+                      <!-- User story #6 - view product details -->
+                      <div style="display:flex; gap:10px; align-items:center;">
+                          <a href="{{ url_for('product_detail', id=row.id) }}" class="btn btn-primary w-100" style="height: 50px">View Details</a>
+
+                          <!-- User story 9 - add items and quantities to a basket - code adapted from ChatGPT appendix D -->
+                          <form action="{{ url_for('add_to_basket', id=row.id) }}" method="POST" style="">
+                              <button class="btn btn-success btn-sm" type="submit">Add to Basket</button><input type="number" name="quantity" class="form-control form-control-sm" placeholder="Quantity" style="width:104px;">
+                          </form>
+                      </div>
+              </td>
+              <td>{{ row.retailer or '—' }}</td>
+              <td>{{ row.category or '—' }}</td>
+              <td>
+                  €{{ "%.2f"|format(row.price) }}
+                  {% if row.unit_price and row.unit_type %}
+                      <br>
+                      <small class="text-muted">
+                          ({{ "%.2f"|format(row.unit_price) }} €/{{ row.unit_type }})
+                      </small>
                   {% endif %}
-                </td>
-              <!-- code above adapted from ChatGPT 4o see appendix C -->
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <div class="alert alert-warning mt-3" role="alert">
-          No products found matching <strong>{{ query }}</strong>.
-        </div>
-      {% endif %}
+              </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- code adapted from youtube video Pagination in Flask: Split Your Data Into Pages - https://www.youtube.com/watch?v=U18hO1ngZEQ -->
+    <div style="margin-top:20px;">
+    {% if page > 1 %}
+        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, sort=sort, page=page-1) }}">Previous</a>
     {% endif %}
+    Page {{ page }} of {{ pages }}
+    {% if page < pages %}
+        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, sort=sort, page=page+1) }}">Next</a>
+    {% endif %}
+    </div>
+
+{% else %}
+    <div class="alert alert-warning mt-3">No products found.</div>
+{% endif %}
+
   </div>
 
 </body>
 </html>
 
-<!-- End of code block for iteration 1 deliverable -->
+<!-- End of code block for iteration 2 deliverable -->

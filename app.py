@@ -1,12 +1,12 @@
-#Deliverable: iteration 1
-# Version 1.0
-#Date: 03/11/2025
+#Deliverable: iteration 2
+# Version 2.0
+#Date: 13/11/2025
 
 # Code below is adapted from Python - Connect to MySQL Database with PyCharm - https://www.youtube.com/watch?v=elWvom3F2tQ – used to connect MySQL database with Python
 # Code below is adapted from youtube video, Flask CRUD App with MySQL & XAMPP | Simple Backend & Frontend Tutorial – https://www.youtube.com/watch?v=3YKyyskO_fE&t=482s – used to aid code in deleting, editing and adding products
 
 from flask import Flask, render_template, request, redirect, url_for, session
-import mysql.connector
+import mysql.connector, sys, subprocess
 
 app = Flask(__name__)
 app.secret_key = "key-secret"
@@ -94,10 +94,23 @@ def delete_product(id):
     db.close()
     return redirect(url_for("products"))
 
+#code adapted from ChatGPT see appendix A
+@app.route("/refresh_prices", methods=["POST"])
+def refresh_prices():
+    try:
+        subprocess.run([sys.executable, "scrape_supervalu.py"], check=True)
+        print(" SuperValu data refreshed.")
+    except Exception as e:
+        print(" Error running scraper:", e)
+    return redirect(url_for("products"))
+
 import search
 import users
+import product_detail
+import compare
+import basket
 
 if __name__ == "__main__":
     app.run(debug=True)
 
-#end of code block for iteration 1 deliverable
+#end of code block for iteration 2 deliverable

@@ -1,0 +1,93 @@
+<!--
+
+Deliverable: Iteration 2
+Version 2.0
+Date: 14/11/2025
+
+code adapted from IS3312 Project Phase 2 - candy_detail file-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ product.name }} – Details</title>
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+  <style>
+    .product-img {
+      max-width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center" style="gap: 15px;">
+      <a class="navbar-brand mb-0">GrocerySaver</a>
+    </div>
+      <div class="d-flex align-items-center" style="gap: 10px;">
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">View Full Basket</a>
+      <a class="nav-link text-light" href="{{ url_for('basket') }}">
+        Basket (€{{ cart_total }})
+      </a>
+    </div>
+
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="card shadow-sm">
+
+    <div class="row g-0">
+
+      <!-- image display  -->
+      <div class="col-md-4 text-center p-3">
+        {% if product.image_url %}
+          <img src="{{ product.image_url }}" class="product-img" alt="{{ product.name }}">
+        {% else %}
+          <p>No image available</p>
+        {% endif %}
+      </div>
+
+      <!-- product details -->
+      <div class="col-md-8">
+        <div class="card-body">
+
+          <h2>{{ product.name }}</h2>
+
+          <p><strong>Retailer:</strong> {{ product.retailer }}</p>
+          <p><strong>Category:</strong> {{ product.category }}</p>
+
+          <p><strong>Price:</strong> €{{ "%.2f"|format(product.price) }}</p>
+
+          {% if product.last_updated %}
+            <hr>
+            <p>
+              <strong>Last Updated:</strong>
+              {{ product.last_updated.strftime('%d-%m-%Y') }}
+            </p>
+          {% endif %}
+
+        <form action="{{ url_for('add_to_basket', id=product.id) }}" method="POST" class="d-flex align-items-center gap-2 mt-3">
+            <input type="number" name="quantity" class="form-control" placeholder="Quantity" style="width: 80px;">
+            <button type="submit" class="btn btn-success">Add to Basket</button>
+        </form>
+
+          <a href="{{ url_for('search') }}" class="btn btn-secondary mt-3">Back to products page</a>
+          <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Back to home page</a>
+
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 2 deliverable -->

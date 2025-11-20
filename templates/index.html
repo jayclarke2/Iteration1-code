@@ -1,10 +1,14 @@
 <!--
 
-Deliverable: Iteration 1
-Version 1.0
-Date: 04/11/2025
+Deliverable: Iteration 2
+Version 2.0
+Date: 14/11/2025
 
-Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (https://startbootstrap.com/template/small-business) * Copyright 2013-2023 Start Bootstrap * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-small-business/blob/master/LICENSE)
+Code presented below is adapted from Start Bootstrap - Small Business v5.0.6
+(https://startbootstrap.com/template/small-business)
+Copyright 2013-2023 Start Bootstrap
+Licensed under MIT
+(https://github.com/StartBootstrap/startbootstrap-small-business/blob/master/LICENSE)
 
 -->
 <!DOCTYPE html>
@@ -21,13 +25,14 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
 
     <!-- Core theme CSS (Bootstrap) -->
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+      <link href="{{ url_for('static', filename='css/background.css') }}" rel="stylesheet" />
   </head>
 
   <body>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container px-5">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Grocery</a>
+        <a class="navbar-brand">GrocerySaver</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +49,7 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login / Sign Up</a></li>
             {% endif %}
+
           </ul>
         </div>
       </div>
@@ -52,9 +58,9 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
     <!-- Welcome message -->
     <div class="bg-light py-3 text-center">
       {% if session.get('guest') %}
-        <p class="mb-0"><strong>Welcome, You’re browsing without an account</strong></p>
+        <p class="mb-0"><strong>Welcome to GrocerySaver !</strong></p>
       {% elif session.get('username') %}
-        <p class="mb-0"><strong>Welcome back, {{ session['username'] }}!</strong></p>
+        <p class="mb-0"><strong>Welcome, {{ session['username'] }}!</strong></p>
       {% else %}
         <p class="mb-0">Welcome to Grocery Comparison! <a href="{{ url_for('login') }}">Login or Continue as Guest</a></p>
       {% endif %}
@@ -62,21 +68,46 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
 
     <!-- home page -->
     <div class="container px-4 px-lg-5">
+
       <!-- Heading Row -->
       <div class="row gx-4 gx-lg-5 align-items-center my-5">
         <div class="col-lg-7">
-          <img class="img-fluid rounded mb-4 mb-lg-0"
-               src="https://static.aviva.io/content/dam/aviva-public/ie/articles/home/make-savings-on-your-weekly-shop.jpg"
-               alt="..." />
+          <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Image">
         </div>
+
+        <!-- User story #8 - Compare equivalent products - Code aided through ChatGPT see appendix C -->
         <div class="col-lg-5">
-          <h1 class="font-weight-light">Business Name or Tagline</h1>
-          <p>
-            This is a template that is great for small businesses. It doesn't have too much fancy flare to it,
-            but it makes a great use of the standard Bootstrap core components. Feel free to use this template
-            for any project you want!
-          </p>
-          <a class="btn btn-primary" href="#!">Call to Action!</a>
+          <div class="card p-4 shadow-sm">
+            <h2 class="mb-3">Quickly compare equivalent products</h2>
+
+            <form method="GET" action="{{ url_for('compare') }}">
+              <input type="text" name="compare" class="form-control mb-3" placeholder="Search for a product" value="{{ request.args.get('compare','') }}" required>
+              <button class="btn btn-primary w-100">Compare</button>
+            </form>
+
+            {% if compare_results %}
+            <hr>
+
+            <h5 class="mt-3 mb-2">Results for "{{ request.args.get('compare') }}":</h5>
+
+            {% if compare_results|length == 0 %}
+              <p>No matching products found.</p>
+            {% else %}
+              <ul class="list-group">
+                {% for p in compare_results %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ p.name }}</strong><br>
+                    <small>{{ p.region }}</small>
+                  </div>
+                  <span>€{{ p.price }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            {% endif %}
+
+          </div>
         </div>
       </div>
 
@@ -103,6 +134,7 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
             <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
           </div>
         </div>
+
         <div class="col-md-4 mb-5">
           <div class="card h-100">
             <div class="card-body">
@@ -115,6 +147,7 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
             <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
           </div>
         </div>
+
         <div class="col-md-4 mb-5">
           <div class="card h-100">
             <div class="card-body">
@@ -143,4 +176,4 @@ Code presented below is adapted from Start Bootstrap - Small Business v5.0.6 (ht
   </body>
 </html>
 
-<!-- End of code block for iteration 1 deliverable -->
+<!-- End of code block for iteration 2 deliverable -->
