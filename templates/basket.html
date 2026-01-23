@@ -1,7 +1,7 @@
 <!--
-Deliverable: Iteration 2
-Version 2.0
-Date: 19/11/2025
+Deliverable: Iteration 3
+Version 3.0
+Date: 08/01/2026
 
 code below is adapted from existing code in search.html to display basket
 -->
@@ -11,32 +11,60 @@ code below is adapted from existing code in search.html to display basket
 <head>
     <meta charset="utf-8">
     <title>Your Basket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 <body class="bg-light">
 
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand">GrocerySaver</a>
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand mb-0">GrocerySaver</a>
+      <a class="nav-link text-light me-auto" href="{{ url_for('index') }}">Home</a>
+      <!-- user story #15 - set a budget limit - code aided and adapted from ChatGPT -Appendix C - Iteration 3 report -->
+      <form method="POST" action="{{ url_for('set_budget') }}" class="d-flex align-items-center me-auto" style="gap:8px;">
+      <label class="text-light mb-0">Budget €</label>
+      <input type="number" min="0" name="budget" class="form-control form-control-sm" style="width:60px" value="{{ budget_limit if budget_limit is not none else '' }}" placeholder="">
+      <button class="btn btn-sm btn-outline-light" type="submit">Confirm</button>
+    </form>
     <a class="nav-link text-light" href="{{ url_for('search') }}">Back to Search</a>
   </div>
 </nav>
 
 <div class="container mt-5">
-    <h2>Your Basket</h2>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Your Basket</h2>
+
+        {% if items|length != 0 %}
+        <form method="POST" action="{{ url_for('clear_basket') }}" class="mb-0">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Clear Basket</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- code aided through ChatGPT - Appendix C - iteration 3 report -->
+    {% if budget_limit is not none %}
+        <p class="mt-2 mb-1">Budget Limit: <strong>€{{ "%.2f"|format(budget_limit) }}</strong></p>
+    {% endif %}
+    {% if over_by %}
+        <div class="alert alert-danger mt-3">Over your Budget by <strong>€{{ "%.2f"|format(over_by) }}</strong>
+        </div>
+    {% endif %}
     <hr>
 
     {% if items|length == 0 %}
         <p class="text-muted">Your basket is empty.</p>
         <a href="{{ url_for('search') }}" class="btn btn-primary mt-3">Return to Search</a>
-
     {% else %}
+        <p class="text-muted">Basket store: <strong>{{ session.get('basket_region') or '—' }}</strong></p>
 
         <table class="table table-bordered mt-3">
             <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
+                    <th>Product Name</th>
+                    <th>Retailer</th>
+                    <th>Region</th>
                     <th>Price (€)</th>
                     <th>Quantity</th>
                     <th>Total (€)</th>
@@ -45,7 +73,17 @@ code below is adapted from existing code in search.html to display basket
             <tbody>
                 {% for item in items %}
                     <tr>
-                        <td>{{ item.name }}</td>
+                        <td>
+  <div class="d-flex align-items-center gap-2">
+      <span>{{ item.name }}</span>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('substitutes', product_id=item.id) }}">Substitutes</a>
+      <form method="POST" action="{{ url_for('remove_from_basket', product_id=item.id) }}" class="mb-0">
+          <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+      </form>
+  </div>
+                        </td>
+                        <td>{{ item.retailer or "—" }}</td>
+                        <td>{{ item.region or "—" }}</td>
                         <td>{{ "%.2f"|format(item.price) }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ "%.2f"|format(item.price * item.quantity) }}</td>
@@ -54,14 +92,95 @@ code below is adapted from existing code in search.html to display basket
             </tbody>
         </table>
 
-        <h4 class="mt-3">Basket Total: €{{ cart_total }}</h4>
+<!-- user story 14 - code aided and adapted through ChatGPT see appendix B - iteration 3 report -->
+        <hr>
+        <h3 class="mb-1">Items Subtotal: <strong>€{{ "%.2f"|format(subtotal) }}</strong></h3>
+        <hr>
+        <p class="mb-1">Delivery Fee: <strong>€{{ "%.2f"|format(delivery_fee) }}</strong></p>
+        <p class="mb-1">Service Fee: <strong>€{{ "%.2f"|format(service_fee) }}</strong></p>
+        <p class="mb-1">Bag Fee: <strong>€{{ "%.2f"|format(bag_fee) }}</strong></p>
+        {% if minimum_spend %}
+            <p class="mb-1">Minimum Spend Required Excluding fees: <strong>€{{ "%.2f"|format(minimum_spend) }}</strong></p>
+        {% endif %}
+        <p class="mb-1">Fees Total: <strong>€{{ "%.2f"|format(fees_total) }}</strong></p>
+        <hr>
+        <h3 class="mt-2">Grand Total: <strong>€{{ "%.2f"|format(grand_total) }}</strong></h3>
+        {% endif %}
 
-        <a href="{{ url_for('search') }}" class="btn btn-primary mt-4">Continue Shopping</a>
+    <!-- user story #17 savings summary - code aided and adapted from ChatGPT - Appendix D iteration 3 report -->
+    {% if items|length > 0 and ((savings and savings.others) or split_best) %}
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                {% if savings and savings.others %}
+                    <h3>Savings Summary</h3>
+                    <p class="text-muted mb-2">Current spending : <strong>€{{ "%.2f"|format(savings.current_total) }}</strong></p>
+                    <ul class="list-group mt-2">
+                        {% for retailer, info in savings.others.items() %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ retailer }}</span>
 
+                                {% if info.missing and info.missing > 0 %}
+                                    <small class="text-muted">No matching items</small>
+                                {% else %}
+                                    <span>
+                                        <small class="text-muted me-2">€{{ "%.2f"|format(info.total) }}</small>
+                                        {% if info.diff < 0 %}
+                                            <strong class="text-success">€{{ "%.2f"|format(-info.diff) }} less</strong>
+                                        {% elif info.diff > 0 %}
+                                            <strong class="text-danger">€{{ "%.2f"|format(info.diff) }} more</strong>
+                                        {% else %}
+                                            <strong>No difference</strong>
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- user story #18 split store savings - code adapted from savings summary html -->
+            <div class="col-md-6">
+                {% if split_best %}
+                    <h3>Split Store Price</h3>
+                    {% if split_best.missing and split_best.missing > 0 %}
+                        <p class="text-muted">Not enough matches to estimate split-store total (missing {{ split_best.missing }} items).</p>
+                    {% else %}
+                        <p class="mb-1">Split Store Total: <strong>€{{ "%.2f"|format(split_best.total) }}</strong></p>
+
+                        {% if savings and savings.current_total %}
+                            {% set diff = split_best.total - savings.current_total %}
+                            {% if diff < 0 %}
+                                <p class="text-success">Potential Savings: <strong>€{{ "%.2f"|format(-diff) }}</strong></p>
+                            {% else %}
+                                <p>No difference.</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    <!-- user story #19 - split store threshold - code adapted from existing code above -->
+                    {% if split_best and split_best.missing == 0 %}
+                        {% if worth_split %}
+                            <p class="text-success">Split Store Threshold: <strong>More than 15% to be saved, worth split !</strong></p>
+                        {% else %}
+                            <p class="text-muted">Split Store Threshold: <strong>Less than 15% to be saved, not worth split</strong></p>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            <div>
+            <strong class="text-muted">Split store excludes any fees.</strong>
+            </div>
+            </div>
+        </div>]
     {% endif %}
+
+
+
+
+
 </div>
 
 </body>
 </html>
 
-<!-- end of code block for iteration 2 deliverable -->
+<!-- end of code block for iteration 3 deliverable -->

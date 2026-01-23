@@ -1,34 +1,40 @@
 #Deliverable: iteration 3
 # Version 3.0
-#Date: 13/01/2026
+#Date: 13/01/2025
 
-#code aided from Beginners Guide To Web Scraping with Python - All You Need To Know - https://www.youtube.com/watch?v=QhD015WUMxE
-#code aided from ChatGPT see appendix A - Iteration 2
+# code taken and adapted from scrape_supervalu.py
 
 import requests
 import mysql.connector
 import re
 
 # store id and categories being scraped
-store_id = 831
+store_id = 409
 category_ids = [
-    ("O100001", "Fresh Food"),            # fruit and veg
-    ("O100017", "Fresh Food"),            # fish and seafood
-    ("O100015", "Fresh Food"),            # meat and poultry
-    ("O100010", "Bakery & Deli"),         # bakery
-    ("O100020", "Bakery & Deli"),         # deli
-    ("O100023", "Dairy & Eggs"),          # cheese
-    ("O100025", "Dairy & Eggs"),          # milk, butter, eggs
-    ("O100027", "Health, Beauty & Baby"), # health and wellness
-    ("O100030", "Chilled & Frozen"),      # chilled food
-    ("O100035", "Food Cupboard"),         # food cupboard
-    ("O100045", "Chilled & Frozen"),      # frozen food
-    ("O100050", "Drinks & Alcohol"),      # drinks
-    ("O100055", "Health, Beauty & Baby"), # beauty & personal care
-    ("O100060", "Health, Beauty & Baby"), # baby
-    ("O100065", "Household & Pets"),      # household
-    ("O100070", "Household & Pets"),      # pets
-    ("O100075", "Drinks & Alcohol"),      # alcohol
+    ("50066", "Fresh Food"),
+    ("47183", "Fresh Food"),
+    ("47181", "Fresh Food"),
+    ("50101", "Fresh Food"),
+    ("53421", "Fresh Food"),
+    ("47171", "Bakery & Deli"),
+    ("49703", "Bakery & Deli"),
+    ("47199", "Bakery & Deli"),
+    ("47197", "Bakery & Deli"),
+    ("47173", "Chilled & Frozen"),
+    ("47185", "Chilled & Frozen"),
+    ("47193", "Health, Beauty & Baby"),
+    ("47169", "Health, Beauty & Baby"),
+    ("47201", "Health, Beauty & Baby"),
+    ("53021", "Health, Beauty & Baby"),
+    ("47175", "Drinks & Alcohol"),
+    ("47203", "Drinks & Alcohol"),
+    ("47177", "Food Cupboard"),
+    ("47191", "Food Cupboard"),
+    ("47189", "Household & Pets"),
+    ("47195", "Household & Pets"),
+    ("47187", "Household & Pets"),
+    ("54441", "Household & Pets"),
+
 ]
 items_per_page = 48
 
@@ -44,18 +50,18 @@ DB_CONFIG = {
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     "Accept": "application/json, text/plain, */*",
-    "Referer": "https://shop.supervalu.ie/",
-    "Origin": "https://shop.supervalu.ie"
+    "Referer": "https://www.dunnesstoresgrocery.com/",
+    "Origin": "https://www.dunnesstoresgrocery.com/"
 }
 
 store_regions = {
-    831: "Ryan's SuperValu Grange Cork",
+    409: "Dunnes Douglas Cork",
 }
 
 def get_store_region():
     return store_regions.get(store_id, "")
 
-def scrape_supervalu():
+def scrape_dunnes():
     all_products = []
 
     # get store region through id
@@ -64,7 +70,7 @@ def scrape_supervalu():
 
     for category_id, category_name in category_ids:
         print(f"\n Scraping {category_name}...")
-        api_url = f"https://storefrontgateway.supervalu.ie/api/stores/{store_id}/categories/{category_id}/search"
+        api_url = f"https://storefrontgateway.dunnesstoresgrocery.com/api/stores/{store_id}/categories/{category_id}/search"
         page = 1
         total_fetched = 0
 
@@ -134,7 +140,7 @@ def scrape_supervalu():
                     "name": name,
                     "price": price,
                     "image_url": image_url,
-                    "retailer": "Supervalu",
+                    "retailer": "Dunnes",
                     "category": category_name,
                     "region": region
                 })
@@ -165,7 +171,7 @@ def save_to_db(products):
         image_url = p.get("image_url")
         category = p.get("category")
         region = p.get("region")
-        retailer = "Supervalu"
+        retailer = "Dunnes"
 
         if not name or not price:
             continue
@@ -202,7 +208,7 @@ def save_to_db(products):
 
 if __name__ == "__main__":
     try:
-        data = scrape_supervalu()
+        data = scrape_dunnes()
         save_to_db(data)
     except Exception as e:
         print(" Error during scrape:", e)

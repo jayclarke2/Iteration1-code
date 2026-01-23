@@ -1,6 +1,6 @@
-#Deliverable: iteration 2
-# Version 2.0
-#Date: 13/11/2025
+#Deliverable: iteration 3
+# Version 3.0
+#Date: 08/01/2026
 
 #Code source: code adapted from existing code for connection to database and sql command
 #code adapted from ChatGPT 4o see appendix B - Iteration 2 report
@@ -21,42 +21,48 @@ def search():
     query = (request.args.get("query") or "").strip()
     selected_retailer = request.args.get("retailer")
     selected_category = request.args.get("category")
+    selected_region = request.args.get("region") or ""
     sort = request.args.get("sort") or ""
 
     rows = []
 
     sql = """
-        SELECT id, name, price, retailer, category, image_url, last_updated, region 
-        FROM product WHERE 1=1 """
+        SELECT id, name, price, member_price, retailer, category, image_url, last_updated, region FROM product WHERE 1=1"""
     params = []
 
     if query:
-        sql += "AND name LIKE %s"
+        sql += " AND name LIKE %s"
         params.append("%" + query + "%")
 
     if selected_retailer not in (None, ""):
-        sql += "AND retailer = %s"
+        sql += " AND retailer = %s"
         params.append(selected_retailer)
 
     if selected_category not in (None, ""):
-        sql += "AND category = %s"
+        sql += " AND category = %s"
         params.append(selected_category)
 
-    if sort == "price_asc":
-        sql += "ORDER BY price ASC"
+    if selected_region:
+        sql += " AND region = %s"
+        params.append(selected_region)
 
-    if sort == "price_desc":
-        sql += "ORDER BY price DESC"
+    if sort == "price_asc":
+        sql += " ORDER BY price ASC"
+    elif sort == "price_desc":
+        sql += " ORDER BY price DESC"
 
     cur.execute(sql, params)
     rows = cur.fetchall()
 
-    # select retailer and category
+    # select retailer and category and region
     cur.execute("SELECT DISTINCT retailer FROM product ORDER BY retailer")
     retailers = [row["retailer"] for row in cur.fetchall()]
 
     cur.execute("SELECT DISTINCT category FROM product ORDER BY category")
     categories = [row["category"] for row in cur.fetchall()]
+
+    cur.execute("SELECT DISTINCT region FROM product ORDER BY region")
+    regions = [row["region"] for row in cur.fetchall()]
 
     cur.close()
     db.close()
@@ -89,4 +95,6 @@ def search():
     end = start + per_page
     rows = rows[start:end]
 
-    return render_template("search.html", query=query, rows=rows, retailers=retailers, categories=categories, selected_retailer=selected_retailer, selected_category=selected_category, sort=sort, page=page, pages=pages)
+    return render_template("search.html", query=query, rows=rows, retailers=retailers, categories=categories, regions=regions, selected_region=selected_region, selected_retailer=selected_retailer, selected_category=selected_category, sort=sort, page=page, pages=pages)
+
+# end of code block for iteration 3 deliverable

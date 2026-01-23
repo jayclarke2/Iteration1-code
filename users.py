@@ -1,6 +1,6 @@
-#Deliverable: iteration 2
-# Version 2.0
-#Date: 14/11/2025
+#Deliverable: iteration 3
+# Version 3.0
+#Date: 13/01/2026
 
 #Code source: code below is adapted from existing app.py code from environment and IS3312 project phase 2 - werkzeug module
 #Code source: code adapted from youtube video https://www.youtube.com/watch?v=lAY7nXh83fI Create Login and Register Flask App (New) - Complete Tutorial
@@ -65,4 +65,4 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for("login"))
 
-#end of code block for iteration 2 deliverable
+#end of code block for iteration 3 deliverable

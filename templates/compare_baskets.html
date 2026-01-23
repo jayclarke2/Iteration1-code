@@ -1,0 +1,112 @@
+<!--
+
+Deliverable: Iteration 3
+Version 3.0
+Date: 16/01/2026
+
+code adapted from existing basket.html code
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Compare Baskets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand mb-0">GrocerySaver</a>
+      <a class="nav-link text-light me-auto" href="{{ url_for('index') }}">Home</a>
+    <div class="d-flex align-items-center" style="gap:10px;">
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('search') }}">Back to Search</a>
+      <form method="POST" action="{{ url_for('clear_compare_baskets') }}">
+        <button class="btn btn-sm btn-outline-danger" type="submit">Clear Both</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2>Compare Two Baskets</h2>
+  <p class="text-muted mb-3">Build Basket 1 and 2</p>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h4>Basket 1</h4>
+        <p class="text-muted mb-1">Store: <strong>{{ basket_1_retailer or "—" }}</strong></p>
+        <p class="text-muted">Region: <strong>{{ basket_1_region or "—" }}</strong></p>
+
+        {% if items_1|length == 0 %}
+          <p class="text-muted">Basket 1 is empty.</p>
+        {% else %}
+          <table class="table table-sm table-bordered">
+            <thead class="table-dark">
+              <tr><th>Name</th><th>Qty</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+              {% for i in items_1 %}
+              <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>€{{ "%.2f"|format(i.price * i.quantity) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <h5>Subtotal: €{{ "%.2f"|format(subtotal_1) }}</h5>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h4>Basket 2</h4>
+        <p class="text-muted mb-1">Store: <strong>{{ basket_2_retailer or "—" }}</strong></p>
+        <p class="text-muted">Region: <strong>{{ basket_2_region or "—" }}</strong></p>
+
+        {% if items_2|length == 0 %}
+          <p class="text-muted">Basket 2 is empty.</p>
+        {% else %}
+          <table class="table table-sm table-bordered">
+            <thead class="table-dark">
+              <tr>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Total</th></tr>
+            </thead>
+            <tbody>
+              {% for i in items_2 %}
+              <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>€{{ "%.2f"|format(i.price * i.quantity) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <h5>Subtotal: €{{ "%.2f"|format(subtotal_2) }}</h5>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <h4>Difference</h4>
+  {% if diff > 0 %}
+    <p class="text-danger">Basket 1 is €{{ "%.2f"|format(diff) }} more expensive than Basket 2</p>
+  {% elif diff < 0 %}
+    <p class="text-success">Basket 1 is €{{ "%.2f"|format(-diff) }} cheaper than Basket 2</p>
+  {% else %}
+    <p>No difference between baskets.</p>
+  {% endif %}
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 3 deliverable -->

@@ -1,0 +1,50 @@
+throughout iteration 3, I worked on the next 10 user stories of my system where alot of the features
+introduced are about price data and comparing grocery prices through new features implemented.
+I worked on scraping data from Dunnes and Aldi and did alot of work on the basket users can build
+and narrowed the use of that down.
+
+user story 11 - see promotions, offers and discounts
+created 3 calling cards on index.html which display live
+promotions, offers and discounts of current products
+
+user story 12 - see member pricing
+member pricing displayed under real price on search.html,
+different member pricing dependant on retailer, 10 percent off
+for supervalu, N/A for Aldi and Vouchers available for Dunnes
+
+user story 13 - select store region
+created a filter dropdown option in the navbar of search.html
+similar to filtering by category or by retailer but with region
+
+user story 14 - include all fees
+all fees including delivery, service and bag fees added onto final price
+to give grand total, seen on basket.html page, different dependant on the retailer
+chosen
+
+user story 15 - set a budget limit
+option to set a budget limit on the nav of basket.html where if the user enters a
+budget and brings spending over that a message of warning appears
+
+user story 16 - see a savings summary of my basket
+savings summary calculated under grand total comparing the current cost at
+retailer where user is shopping compared to other retailers
+
+user story 17 - compare two baskets side by side
+allows two users to build 2 baskets sid by side to compare, click compare basket
+from dropdown with single basket and choose compare and build and add items
+to basket 1 and 2 respectively
+
+user story 18 - see split store savings
+calculated similarly to summary savings but uses all retailers combined to
+get cheapest possible total, seen below building a basket
+
+user story 19 - split store threshold
+has to be more 15 percent of original spending to decide if split store
+purchases is worth it, a message will appear saying if to do so or not
+
+user story 20 - substitute products
+sub products available matching from database by similar name and price with
+same retailer and region, button next to product in basket will allow user
+to view substitute and add it to basket to replace other products
+
+

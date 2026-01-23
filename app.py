@@ -1,6 +1,6 @@
-#Deliverable: iteration 2
-# Version 2.0
-#Date: 13/11/2025
+#Deliverable: iteration 3
+# Version 3.0
+#Date: 13/01/2026
 
 # Code below is adapted from Python - Connect to MySQL Database with PyCharm - https://www.youtube.com/watch?v=elWvom3F2tQ – used to connect MySQL database with Python
 # Code below is adapted from youtube video, Flask CRUD App with MySQL & XAMPP | Simple Backend & Frontend Tutorial – https://www.youtube.com/watch?v=3YKyyskO_fE&t=482s – used to aid code in deleting, editing and adding products
@@ -94,7 +94,7 @@ def delete_product(id):
     db.close()
     return redirect(url_for("products"))
 
-#code adapted from ChatGPT see appendix A
+#code adapted from ChatGPT see appendix A - iteration 1
 @app.route("/refresh_prices", methods=["POST"])
 def refresh_prices():
     try:
@@ -109,8 +109,11 @@ import users
 import product_detail
 import compare
 import basket
+import compare_baskets
+import promo_disc_offers
+import substitutes
 
 if __name__ == "__main__":
     app.run(debug=True)
 
-#end of code block for iteration 2 deliverable
+#end of code block for iteration 3 deliverable

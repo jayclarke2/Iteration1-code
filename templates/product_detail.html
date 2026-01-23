@@ -1,8 +1,8 @@
 <!--
 
-Deliverable: Iteration 2
-Version 2.0
-Date: 14/11/2025
+Deliverable: Iteration 3
+Version 3.0
+Date: 13/01/2026
 
 code adapted from IS3312 Project Phase 2 - candy_detail file-->
 
@@ -28,7 +28,7 @@ code adapted from IS3312 Project Phase 2 - candy_detail file-->
       <a class="navbar-brand mb-0">GrocerySaver</a>
     </div>
       <div class="d-flex align-items-center" style="gap: 10px;">
-      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">View Full Basket</a>
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">See Single Basket</a>
       <a class="nav-link text-light" href="{{ url_for('basket') }}">
         Basket (€{{ cart_total }})
       </a>
@@ -72,7 +72,7 @@ code adapted from IS3312 Project Phase 2 - candy_detail file-->
 
         <form action="{{ url_for('add_to_basket', id=product.id) }}" method="POST" class="d-flex align-items-center gap-2 mt-3">
             <input type="number" name="quantity" class="form-control" placeholder="Quantity" style="width: 80px;">
-            <button type="submit" class="btn btn-success">Add to Basket</button>
+            <button type="submit" class="btn btn-success">Add To Single Basket</button>
         </form>
 
           <a href="{{ url_for('search') }}" class="btn btn-secondary mt-3">Back to products page</a>
@@ -84,10 +84,11 @@ code adapted from IS3312 Project Phase 2 - candy_detail file-->
 
     </div>
 
+
   </div>
 </div>
 
 </body>
 </html>
 
-<!-- end of code block for iteration 2 deliverable -->
+<!-- end of code block for iteration 3 deliverable -->

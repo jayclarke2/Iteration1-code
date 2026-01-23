@@ -1,16 +1,15 @@
 #Deliverable: iteration 3
 # Version 3.0
-#Date: 13/01/2026
+#Date: 13/01/2025
 
-#code aided from Beginners Guide To Web Scraping with Python - All You Need To Know - https://www.youtube.com/watch?v=QhD015WUMxE
-#code aided from ChatGPT see appendix A - Iteration 2
+#code adapted from existing code in scrape_supervalu.py
 
 import requests
 import mysql.connector
 import re
 
 # store id and categories being scraped
-store_id = 831
+store_id = 260
 category_ids = [
     ("O100001", "Fresh Food"),            # fruit and veg
     ("O100017", "Fresh Food"),            # fish and seafood
@@ -49,7 +48,7 @@ headers = {
 }
 
 store_regions = {
-    831: "Ryan's SuperValu Grange Cork",
+    260: "Quish's Supervalu Ballincollig Cork",
 }
 
 def get_store_region():
@@ -170,7 +169,7 @@ def save_to_db(products):
         if not name or not price:
             continue
 
-        cur.execute("""SELECT id FROM product WHERE name = %s AND retailer = %s AND region = %s """, (name, retailer, region))
+        cur.execute("""SELECT id FROM product WHERE name = %s AND retailer = %s AND region = %s""", (name, retailer, region))
         existing = cur.fetchone()
 
         if existing:

@@ -1,7 +1,7 @@
 <!--
-Deliverable: Iteration 2
-Version 2.0
-Date: 13/11/2025
+Deliverable: Iteration 3
+Version 3.0
+Date: 13/01/2026
 
 Code presented below is adapted from existing code and IS3312 Project Phase 2
 aided with ChatGPT 4o see appendix B iteration 2 report
@@ -25,31 +25,75 @@ aided with ChatGPT 4o see appendix B iteration 2 report
       <a class="nav-link text-light" href="{{ url_for('index') }}">Home</a>
     </div>
       <div class="d-flex align-items-center" style="gap: 10px;">
-      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">View Full Basket</a>
+      <!-- user story #17 compare two baskets side by side, code adapted from existing filtering code -->
+          <form method="POST" action="{{ url_for('set_compare_mode') }}">
+              <select name="mode" class="form-select form-select-sm" onchange="this.form.submit()">
+                  <option value="single" {% if not session.get('compare_mode') %}selected{% endif %}>Single Basket</option>
+                  <option value="compare" {% if session.get('compare_mode') %}selected{% endif %}>Compare Baskets</option>
+              </select>
+          </form>
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('compare_baskets') }}">See Comparison Baskets</a>
+
+          <!-- user story 13 - correct store region -->
+          <!-- code adapted from existing filtering code -->
+          <form method="get" action="{{ url_for('search') }}" class="d-flex align-items-center" style="gap:8px;">
+              <input type="hidden" name="query" value="{{ query or '' }}">
+              <input type="hidden" name="retailer" value="{{ selected_retailer or '' }}">
+              <input type="hidden" name="category" value="{{ selected_category or '' }}">
+              <input type="hidden" name="sort" value="{{ sort or '' }}">
+
+              <label class="text-light mb-0">Select Store Region:</label>
+              <select name="region" class="form-select form-select-sm" onchange="this.form.submit()" style="width:150px;">
+                  <option value="">All Stores</option>
+                  {% for r in regions %}
+                      <option value="{{ r }}" {% if selected_region == r %}selected{% endif %}>{{ r }}</option>
+                  {% endfor %}
+              </select>
+          </form>
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">See Full Basket</a>
           <!-- User story #10 see a basket total -->
-      <a class="nav-link text-light" href="{{ url_for('basket') }}">
-        Basket (€{{ cart_total }})
-      </a>
+          <a class="nav-link text-light" href="{{ url_for('basket') }}">Basket (€{{ cart_total }})</a>
     </div>
 
   </div>
 </nav>
 
+  <!-- Flash messages for basket -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="container mt-3">
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
   <!-- search heading -->
   <div class="container mt-5">
-    <h1 class="mb-4">Search Products</h1>
-
+    <h3 class="mb-4">Search your favourites</h3>
+  <h5>Check out the latest prices from Supervalu, Aldi and Dunnes below !</h5>
     <!-- search form -->
     <form method="get" action="{{ url_for('search') }}" class="mb-4">
-      <div class="input-group">
-        <input type="text" name="query" class="form-control" placeholder="Enter name" value="{{ query }}">
-        <button class="btn btn-primary" type="submit">Search</button>
-      </div>
+        <input type="hidden" name="region" value="{{ selected_region or "" }}">
+        <input type="hidden" name="retailer" value="{{ selected_retailer or "" }}">
+        <input type="hidden" name="category" value="{{ selected_category or "" }}">
+        <input type="hidden" name="sort" value="{{ sort or "" }}">
+        <div class="input-group">
+            <input type="text" name="query" class="form-control" placeholder="Enter name" value="{{ query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
     </form>
+
 
     <!-- User story #4 - Filter - Code adapted from IS3312 Project Phase 2 -->
   <form method="get" action="{{ url_for('search') }}" class="row mb-4">
+      <input type="hidden" name="region" value="{{ selected_region }}">
+      <input type="hidden" name="query" value="{{ query }}">
+
+
   <div class="col-md-4">
     <label class="form-label">Filter by Retailer</label>
     <select name="retailer" class="form-select" onchange="this.form.submit()">
@@ -69,7 +113,6 @@ aided with ChatGPT 4o see appendix B iteration 2 report
       {% endfor %}
     </select>
   </div>
-
   <!-- User story #5 - sort by price/unit price aided from ChatGPT see appendix B - Iteration 2 Report -->
   <div class="col-md-4">
     <label class="form-label">Sort By</label>
@@ -81,6 +124,7 @@ aided with ChatGPT 4o see appendix B iteration 2 report
       <option value="unit_desc"  {% if sort == 'unit_desc' %}selected{% endif %}>Unit Price: High to Low</option>
     </select>
   </div>
+
 </form>
 
     <!-- Results -->
@@ -88,11 +132,11 @@ aided with ChatGPT 4o see appendix B iteration 2 report
     <table class="table table-bordered table-hover mt-3">
       <thead class="table-dark">
         <tr>
-          <th>Image</th>
+          <th>Product Image</th>
           <th>Name</th>
           <th>Retailer</th>
           <th>Category</th>
-          <th>Price (€)</th>
+          <th>Price €</th>
         </tr>
       </thead>
       <tbody>
@@ -110,38 +154,58 @@ aided with ChatGPT 4o see appendix B iteration 2 report
 
                       <!-- User story #6 - view product details -->
                       <div style="display:flex; gap:10px; align-items:center;">
-                          <a href="{{ url_for('product_detail', id=row.id) }}" class="btn btn-primary w-100" style="height: 50px">View Details</a>
+                          <a href="{{ url_for('product_detail', id=row.id) }}" class="btn btn-primary w-100" style="height: 50px" style="width: 80px">View Details</a>
 
-                          <!-- User story 9 - add items and quantities to a basket - code adapted from ChatGPT appendix D -->
-                          <form action="{{ url_for('add_to_basket', id=row.id) }}" method="POST" style="">
-                              <button class="btn btn-success btn-sm" type="submit">Add to Basket</button><input type="number" name="quantity" class="form-control form-control-sm" placeholder="Quantity" style="width:104px;">
+                          <!-- User story 9 + 17  - code adapted to include basket choice -  add items and quantities to a basket - code adapted from ChatGPT appendix D -->
+                          <form action="{{ url_for('add_to_basket', id=row.id) }}" method="POST" class="d-flex align-items-center" style="gap:6px;">
+                              {% if session.get('compare_mode') %}
+                                  <select name="basket" class="form-select form-select-sm" style="width:110px;">
+                                      <option value="1">Basket 1</option>
+                                      <option value="2">Basket 2</option>
+                                  </select>
+                              {% endif %}
+                              <button class="btn btn-success btn-sm" type="submit" style="width:80px;">Add to Basket</button><input type="number" name="quantity" class="form-control form-control-sm" placeholder="Quantity" style="width:80px;">
                           </form>
                       </div>
               </td>
               <td>{{ row.retailer or '—' }}</td>
               <td>{{ row.category or '—' }}</td>
               <td>
-                  €{{ "%.2f"|format(row.price) }}
+                  <strong>€{{ "%.2f"|format(row.price) }}</strong>
                   {% if row.unit_price and row.unit_type %}
                       <br>
                       <small class="text-muted">
                           ({{ "%.2f"|format(row.unit_price) }} €/{{ row.unit_type }})
                       </small>
                   {% endif %}
+              <!-- user story #12 see member pricing -->
+              <!-- code adapted from price format above -->
+                  {% if row.retailer == 'Supervalu' and row.member_price %}
+                      <br>
+                      <strong class="text fw-bold d-block">Member Price: €{{ "%.2f"|format(row.member_price) }}</strong>
+                      <small class="text-muted d-block">Save €{{ "%.2f"|format(row.price - row.member_price) }}</small>
+                  {% elif row.retailer == 'Aldi' %}
+                      <br>
+                      <small class="text-muted">Member: N/A</small>
+                  {% elif row.retailer == 'Dunnes' %}
+                      <br>
+                      <small class="text-muted">Member: VALUEclub Points & Vouchers Savings Available</small>
+                  {% endif %}
               </td>
+
           </tr>
       {% endfor %}
       </tbody>
     </table>
 
-    <!-- code adapted from youtube video Pagination in Flask: Split Your Data Into Pages - https://www.youtube.com/watch?v=U18hO1ngZEQ -->
+    <!-- code adapted from YouTube video Pagination in Flask: Split Your Data Into Pages - https://www.youtube.com/watch?v=U18hO1ngZEQ -->
     <div style="margin-top:20px;">
     {% if page > 1 %}
-        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, sort=sort, page=page-1) }}">Previous</a>
+        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, region=selected_region, sort=sort, page=page-1) }}">Previous</a>
     {% endif %}
     Page {{ page }} of {{ pages }}
     {% if page < pages %}
-        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, sort=sort, page=page+1) }}">Next</a>
+        <a href="{{ url_for('search', query=query, retailer=selected_retailer, category=selected_category, region=selected_region, sort=sort, page=page+1) }}">Next</a>
     {% endif %}
     </div>
 
@@ -154,4 +218,4 @@ aided with ChatGPT 4o see appendix B iteration 2 report
 </body>
 </html>
 
-<!-- End of code block for iteration 2 deliverable -->
+<!-- End of code block for iteration 3 deliverable -->

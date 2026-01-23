@@ -1,8 +1,8 @@
 <!--
 
-Deliverable: Iteration 2
-Version 2.0
-Date: 14/11/2025
+Deliverable: Iteration 3
+Version 3.0
+Date: 13/01/2026
 
 Code presented below is adapted from Start Bootstrap - Small Business v5.0.6
 (https://startbootstrap.com/template/small-business)
@@ -40,18 +40,22 @@ Licensed under MIT
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="{{ url_for('products') }}">Admin</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('search') }}">Search</a></li>
-
             {% if session.get('username') or session.get('guest') %}
               <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login / Sign Up</a></li>
             {% endif %}
-
           </ul>
         </div>
+          <div class="d-flex align-items-center">
+              <a class="btn btn-sm btn-outline-light me-1" href="{{ url_for('compare_baskets') }}">Comparison Baskets</a>
+              <a class="btn btn-sm btn-outline-light me-2" href="{{ url_for('basket') }}">See Basket</a>
+              <a class="nav-link text-light mb-0 p-0" href="{{ url_for('basket') }}">Total (€{{ cart_total }})</a>
+          </div>
+
       </div>
     </nav>
 
@@ -75,10 +79,10 @@ Licensed under MIT
           <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Image">
         </div>
 
-        <!-- User story #8 - Compare equivalent products - Code aided through ChatGPT see appendix C -->
+        <!-- User story #8 - Compare equivalent products - Code aided through ChatGPT see appendix C - iteration 2 report -->
         <div class="col-lg-5">
           <div class="card p-4 shadow-sm">
-            <h2 class="mb-3">Quickly compare equivalent products</h2>
+            <h2 class="mb-3">Quickly Compare Equivalent Products</h2>
 
             <form method="GET" action="{{ url_for('compare') }}">
               <input type="text" name="compare" class="form-control mb-3" placeholder="Search for a product" value="{{ request.args.get('compare','') }}" required>
@@ -121,52 +125,45 @@ Licensed under MIT
       </div>
 
       <!-- Content Row -->
-      <div class="row gx-4 gx-lg-5">
-        <div class="col-md-4 mb-5">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="card-title">Card One</h2>
-              <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam
-                molestias corporis quod, ea minima accusamus.
-              </p>
-            </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-          </div>
-        </div>
+<div class="row gx-4 gx-lg-5">
 
-        <div class="col-md-4 mb-5">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="card-title">Card Two</h2>
-              <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt
-                pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.
-              </p>
-            </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-          </div>
-        </div>
-
-        <div class="col-md-4 mb-5">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="card-title">Card Three</h2>
-              <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam
-                molestias corporis quod, ea minima accusamus.
-              </p>
-            </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-          </div>
-        </div>
+  <!-- Promotion, offers, discounts - user story 11 -->
+  <div class="col-md-4 mb-5">
+      <div class="card h-100">
+          <div class="card-body"><h2 class="card-title">Promotions</h2><p class="card-text">View highlighted grocery products selected to help you save money across retailers.</p>
+      </div>
+          <div class="card-footer"><a class="btn btn-primary btn-sm" href="promotions">View Promotions</a>
       </div>
     </div>
+  </div>
+
+  <div class="col-md-4 mb-5">
+    <div class="card h-100">
+      <div class="card-body"><h2 class="card-title">Offers</h2><p class="card-text">Find the best value grocery items by comparing prices across Aldi and SuperValu.</p>
+      </div>
+        <div class="card-footer">
+            <a class="btn btn-primary btn-sm" href="offers">View Offers</a>
+        </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-5">
+    <div class="card h-100">
+      <div class="card-body"><h2 class="card-title">Discounts</h2><p class="card-text">Browse discounted and special value products currently available.</p>
+      </div>
+        <div class="card-footer">
+            <a class="btn btn-primary btn-sm" href="discounts">View Discounts</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
     <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container px-4 px-lg-5">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
+        <p class="m-0 text-center text-white">Copyright &copy; GrocerySaver</p>
       </div>
     </footer>
 
@@ -176,4 +173,4 @@ Licensed under MIT
   </body>
 </html>
 
-<!-- End of code block for iteration 2 deliverable -->
+<!-- End of code block for iteration 3 deliverable -->
