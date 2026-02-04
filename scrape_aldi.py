@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 06/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 #code adapted from existing code in scrape_supervalu.py
 #code aided and adapted from ChatGPT see appendix A - Iteration 3 Report
@@ -267,4 +267,4 @@ if __name__ == "__main__":
     except Exception as e:
         print("Error during Aldi scrape:", e)
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

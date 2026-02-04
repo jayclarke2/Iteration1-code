@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 16/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 # code below adapted from existing basket.py code to create two seperate baskets
 
@@ -37,4 +37,4 @@ def compare_baskets():
 
     return render_template("compare_baskets.html", items_1=items_1, items_2=items_2, subtotal_1=subtotal_1, subtotal_2=subtotal_2, diff=diff, basket_1_retailer=session.get("basket_1_retailer"), basket_1_region=session.get("basket_1_region"), basket_2_retailer=session.get("basket_2_retailer"), basket_2_region=session.get("basket_2_region"),)
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

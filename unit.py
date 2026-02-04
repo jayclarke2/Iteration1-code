@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 13/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 #Code source: Code is aided from ChatGPT 4o see Appendix A in report Iteration 1
 import re
@@ -53,4 +53,4 @@ def unit_price(product):
 
     return product
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

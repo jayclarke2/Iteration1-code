@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 13/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 #code adapted from existing code in search.py
 from flask import request, render_template
@@ -33,4 +33,4 @@ def compare():
 
     return render_template("index.html", compare_results=compare_results, compare_query=compare_query)
 
-#end of code block for iteration 3 deliverable
+#end of code block for iteration 4 deliverable

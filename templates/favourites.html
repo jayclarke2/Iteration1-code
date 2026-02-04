@@ -1,0 +1,93 @@
+<!--
+Deliverable: Iteration 4
+Version 4.0
+Date: 02/02/2026
+-->
+
+<!-- code aided from ChatGPT see Appendix B - Iteration 4 Report -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Favourites</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container px-5">
+    <ul class="navbar-nav d-flex flex-row align-items-center gap-3 mb-0">
+      <li class="nav-item">
+        <span class="navbar-brand mb-0">GrocerySaver</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('search') }}">Back to Search</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('basket') }}">See Full Basket</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-light" href="{{ url_for('basket') }}">
+          Basket (€{{ cart_total }})
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container mt-4">
+  <h2>My Favourites</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-3">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if products|length == 0 %}
+    <p class="text-muted mt-3">No favourites yet.</p>
+  {% else %}
+    <div class="row mt-3">
+      {% for p in products %}
+        <div class="col-md-3 mb-3">
+          <div class="card h-100 shadow-sm p-2">
+            {% if p.image_url %}
+              <img src="{{ p.image_url }}" class="card-img-top" alt="{{ p.name }}">
+            {% endif %}
+            <div class="card-body">
+              <strong>{{ p.name }}</strong><br>
+              <small class="text-muted">{{ p.retailer }} · {{ p.region }}</small><br>
+              <div class="mt-2"><strong>€{{ "%.2f"|format(p.price) }}</strong></div>
+
+              <div class="d-flex gap-2 mt-2">
+                <form method="POST" action="{{ url_for('add_to_basket', id=p.id) }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <input type="hidden" name="next" value="{{ request.full_path }}">
+                  <button class="btn btn-sm btn-success" type="submit">Add to basket</button>
+                </form>
+
+                <form method="POST" action="{{ url_for('unfavourite', product_id=p.id) }}">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Remove from favourites</button>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 4 deliverable -->

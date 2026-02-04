@@ -1,0 +1,69 @@
+<!--
+Deliverable: Iteration 4
+Version 4.0
+Date: 01/02/2026
+
+code adapted from user story 22 - saved_baskets.html
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Templates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand mb-0">GrocerySaver</a>
+    <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">Back to Basket</a>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container mt-4">
+  <h2>Basket Templates</h2>
+  <p class="text-muted">Start faster by loading a saved basket template, your live basket must be empty to use.</p>
+
+  {% if templates|length == 0 %}
+    <p class="text-muted">No templates yet.</p>
+  {% else %}
+    <ul class="list-group">
+      {% for t in templates %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ t.name }}</strong><br>
+            <small class="text-muted">{{ t.retailer or "—" }} • {{ t.region or "—" }}</small>
+          </div>
+
+            <div class="d-flex" style="gap:8px;">
+          <form method="POST" action="{{ url_for('start_from_template', template_id=t.id) }}">
+            <button class="btn btn-sm btn-primary" type="submit">Start</button>
+          </form>
+            <form method="POST" action="{{ url_for('delete_template', template_id=t.id) }}">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Delete Saved Template</button>
+            </form>
+            </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 4 deliverable -->
