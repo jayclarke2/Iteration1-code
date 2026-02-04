@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 17/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 # user story 16 - see savings summary
 # code aided from ChatGPT - Appendix D - Iteration 3 report
@@ -127,4 +127,4 @@ def split_store_best_total(cart_items):
 
     return {"total": round(total, 2), "missing": missing}
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

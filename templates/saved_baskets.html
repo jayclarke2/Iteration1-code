@@ -1,0 +1,74 @@
+<!--
+Deliverable: Iteration 4
+Version 4.0
+Date: 01/02/2026
+
+code adapted from ChatGPT see appendix A - Iteration 4 Report
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Saved Baskets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand mb-0">GrocerySaver</a>
+    <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">Back to Basket</a>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container mt-4">
+  <h2>My Saved Baskets</h2>
+
+  {% if baskets|length == 0 %}
+    <p class="text-muted mt-3">No saved baskets yet.</p>
+  {% else %}
+    <div class="list-group mt-3">
+      {% for b in baskets %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ b.name }}</strong><br>
+            <small class="text-muted">
+              {{ b.created_at }} —
+              {{ b.retailer or "—" }} / {{ b.region or "—" }}
+            </small>
+          </div>
+
+          <div class="d-flex" style="gap:8px;">
+            <form method="POST" action="{{ url_for('load_basket', basket_id=b.id) }}">
+              <button class="btn btn-sm btn-primary" type="submit">Load to current basket</button>
+            </form>
+            <form method="POST" action="{{ url_for('delete_saved_basket', basket_id=b.id) }}">
+              <button class="btn btn-sm btn-outline-danger" type="submit">Delete saved basket</button>
+            </form>
+              <!-- user story 24 - add items from past baskets -->
+              <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('view_saved_basket', basket_id=b.id) }}">View items
+              </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 4 deliverable -->

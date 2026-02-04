@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 20/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 # user story 11 - promotions, discounts, offers
 #code adapted from existing app.routes
 
@@ -43,4 +43,4 @@ def discounts():
     db.close()
     return render_template("discounts.html", products=products)
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

@@ -1,0 +1,46 @@
+Throughout this iteration I worked mainly on my next 5 user stories which I will outline below.
+I attempted some scraping of promotions and tesco but they remain to be blocked and difficult
+to obtain.
+
+User story 21 - Choose preferred store/retailer:
+allows users to set preferred store and lock it in place so their products come up, steps below
+1. User logs in or continues as guest
+2. click search on navbar
+3. select store region from dropdown in nav and set as preferred store
+4. go in between pages of the system to see that stores items will still appear
+
+User story 22: Save and load baskets
+allow users to save their favourite baskets they build with a name and load it to existing basket, steps below
+1. User logs in with username
+2. click search on navbar
+3. build a basket
+4. click see full basket in navbar
+5. give it a name and click save
+6. click view full basket and load basket to existing basket or delete saved basket completely
+
+User story 23: Use a basket template:
+Similar to save basket, allows users to build a starter template basket
+1. User logs in with username
+2. click search on navbar
+3. build a basket and click see full basket in navbar
+4. give it a name and click save
+5. to use as a template ensure existing basket is empty
+6. click start and it will load to basket or click delete from templates
+
+User story 24: Add from past baskets
+Allow users to add specific products from past baskets to current basket
+1. user logs in with username
+2. click search on navbar
+3. click see full basket
+4. click view saved basket
+5. click view items on saved basket
+6. add specific products to current basket
+
+User story 25: Favourite items to add
+allows users build a page of their favourite products
+1. User logs in with username
+2. click search on navbar
+3. click favourite button specific to products
+4. click view favourites in navbar
+5. add favourites to current basket or remove from favourites page
+

@@ -1,7 +1,7 @@
 <!--
-Deliverable: Iteration 3
-Version 3.0
-Date: 13/01/2026
+Deliverable: Iteration 4
+Version 4.0
+Date: 31/01/2026
 
 Code presented below is adapted from existing code and IS3312 Project Phase 2
 aided with ChatGPT 4o see appendix B iteration 2 report
@@ -21,8 +21,12 @@ aided with ChatGPT 4o see appendix B iteration 2 report
   <nav class="navbar navbar-dark bg-dark">
   <div class="container d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center" style="gap: 15px;">
-      <a class="navbar-brand mb-0">GrocerySaver</a>
       <a class="nav-link text-light" href="{{ url_for('index') }}">Home</a>
+    <!-- user story 25 - favourite items to add - code adapted from existing code -->
+        {% if session.get("user_id") and not session.get("guest") %}
+            <a href="{{ url_for('favourites') }}" class="nav-link text-light">View Favourites</a>
+        {% endif %}
+
     </div>
       <div class="d-flex align-items-center" style="gap: 10px;">
       <!-- user story #17 compare two baskets side by side, code adapted from existing filtering code -->
@@ -50,6 +54,12 @@ aided with ChatGPT 4o see appendix B iteration 2 report
                   {% endfor %}
               </select>
           </form>
+      <!-- user store 21 choose preferred retailer/store  -->
+          <form method="POST" action="{{ url_for('preferred_region') }}" class="d-flex align-items-center" style="gap:8px;">
+              <input type="hidden" name="region" value="{{ selected_region or '' }}">
+              <button class="btn btn-sm btn-outline-light" type="submit">Save as Preferred Store</button>
+          </form>
+
           <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">See Full Basket</a>
           <!-- User story #10 see a basket total -->
           <a class="nav-link text-light" href="{{ url_for('basket') }}">Basket (€{{ cart_total }})</a>
@@ -75,6 +85,14 @@ aided with ChatGPT 4o see appendix B iteration 2 report
   <div class="container mt-5">
     <h3 class="mb-4">Search your favourites</h3>
   <h5>Check out the latest prices from Supervalu, Aldi and Dunnes below !</h5>
+
+  <!-- user story 21 - show preferred store -->
+      {% if session.get("preferred_region") %}
+          <small class="mb-4">
+              <p>Preferred Store: <b>{{ session.get("preferred_region") }}</b></p>
+          </small>
+      {% endif %}
+
     <!-- search form -->
     <form method="get" action="{{ url_for('search') }}" class="mb-4">
         <input type="hidden" name="region" value="{{ selected_region or "" }}">
@@ -95,14 +113,18 @@ aided with ChatGPT 4o see appendix B iteration 2 report
 
 
   <div class="col-md-4">
-    <label class="form-label">Filter by Retailer</label>
-    <select name="retailer" class="form-select" onchange="this.form.submit()">
+  <label class="form-label">Filter by Retailer</label>
+
+  <div class="d-flex align-items-center" style="gap:8px;">
+    <select name="retailer" class="form-select flex-grow-1" onchange="this.form.submit()">
       <option value="">Retailers</option>
-      {% for r in retailers %}
-        <option value="{{ r }}" {% if selected_retailer == r %}selected{% endif %}>{{ r }}</option>
-      {% endfor %}
+        {% for r in retailers %}
+            <option value="{{ r }}" {% if selected_retailer == r %}selected{% endif %}>{{ r }}</option>
+        {% endfor %}
     </select>
   </div>
+</div>
+
 
   <div class="col-md-4">
     <label class="form-label">Filter by Category</label>
@@ -164,9 +186,21 @@ aided with ChatGPT 4o see appendix B iteration 2 report
                                       <option value="2">Basket 2</option>
                                   </select>
                               {% endif %}
-                              <button class="btn btn-success btn-sm" type="submit" style="width:80px;">Add to Basket</button><input type="number" name="quantity" class="form-control form-control-sm" placeholder="Quantity" style="width:80px;">
+                              <button class="btn btn-success btn-sm" type="submit" style="width:80px;">Add to Basket</button>
+                              <input type="number" name="quantity" class="form-control form-control-sm" placeholder="Quantity" style="width:80px;">
+                              <input type="hidden" name="region" value="{{ selected_region or "" }}">
+                              <input type="hidden" name="retailer" value="{{ selected_retailer or "" }}">
+                              <input type="hidden" name="category" value="{{ selected_category or "" }}">
+                              <input type="hidden" name="sort" value="{{ sort or "" }}">
                           </form>
+                          <!-- user story 25- favourite items to add - code adapted from existing code -->
+                          {% if session.get("user_id") and not session.get("guest") %}
+                              <form method="POST" action="{{ url_for('favourite', product_id=row.id) }}">
+                              <button class="btn btn-warning btn-sm" type="submit">Favourite ★</button>
+                          </form>
+                      {% endif %}
                       </div>
+
               </td>
               <td>{{ row.retailer or '—' }}</td>
               <td>{{ row.category or '—' }}</td>
@@ -218,4 +252,4 @@ aided with ChatGPT 4o see appendix B iteration 2 report
 </body>
 </html>
 
-<!-- End of code block for iteration 3 deliverable -->
+<!-- End of code block for iteration 4 deliverable -->

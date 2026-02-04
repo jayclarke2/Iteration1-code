@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 20/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 # code below aided from ChatGPT see Appendix E - iteration 3 report
 
@@ -81,4 +81,4 @@ def substitutes(product_id):
 
     return render_template("substitutes.html", original=original, subs=subs)
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

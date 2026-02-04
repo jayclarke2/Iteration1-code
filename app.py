@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 13/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 
 # Code below is adapted from Python - Connect to MySQL Database with PyCharm - https://www.youtube.com/watch?v=elWvom3F2tQ – used to connect MySQL database with Python
 # Code below is adapted from youtube video, Flask CRUD App with MySQL & XAMPP | Simple Backend & Frontend Tutorial – https://www.youtube.com/watch?v=3YKyyskO_fE&t=482s – used to aid code in deleting, editing and adding products
@@ -112,8 +112,11 @@ import basket
 import compare_baskets
 import promo_disc_offers
 import substitutes
+import saved_baskets
+import add_past_items
+import favourites
 
 if __name__ == "__main__":
     app.run(debug=True)
 
-#end of code block for iteration 3 deliverable
+#end of code block for iteration 4 deliverable

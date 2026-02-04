@@ -1,8 +1,8 @@
 <!--
 
-Deliverable: Iteration 3
-Version 3.0
-Date: 13/01/2026
+Deliverable: Iteration 4
+Version 4.0
+Date: 31/01/2026
 
 Code presented below is adapted from Start Bootstrap - Small Business v5.0.6
 (https://startbootstrap.com/template/small-business)
@@ -69,6 +69,16 @@ Licensed under MIT
         <p class="mb-0">Welcome to Grocery Comparison! <a href="{{ url_for('login') }}">Login or Continue as Guest</a></p>
       {% endif %}
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
     <!-- home page -->
     <div class="container px-4 px-lg-5">
@@ -173,4 +183,4 @@ Licensed under MIT
   </body>
 </html>
 
-<!-- End of code block for iteration 3 deliverable -->
+<!-- End of code block for iteration 4 deliverable -->

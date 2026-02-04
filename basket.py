@@ -1,6 +1,6 @@
-#Deliverable: iteration 3
-# Version 3.0
-#Date: 08/01/2026
+#Deliverable: iteration 4
+# Version 4.0
+#Date: 31/01/2026
 #
 #code below adapted from IS3312 Project Phase 2
 #code adapted from IS3312 Project Phase 2 - cart.py
@@ -169,14 +169,15 @@ def basket():
     split_best = split_store_best_total(list(items))
 
     # user story 19 - split store threshold
-    threshold_percent = 0.15
+    threshold_percent = 0.25
     split_saving = 0.0
     worth_split = False
 
     if split_best and split_best.get("missing", 0) == 0 and savings and savings.get("current_total"):
         split_saving = round(savings["current_total"] - split_best["total"], 2)
 
-        worth_split = (split_saving >= split_saving >= savings["current_total"] * threshold_percent)
+        # worth it if saving is > 25%
+        worth_split = split_saving >= (savings["current_total"] * threshold_percent)
 
     # calculate over budget
     budget_limit = session.get("budget_limit")
@@ -189,4 +190,4 @@ def basket():
 def display_cart_total():
     return {"cart_total": Cart(key="cart").total_price()}
 
-# end of code block for iteration 3 deliverable
+# end of code block for iteration 4 deliverable

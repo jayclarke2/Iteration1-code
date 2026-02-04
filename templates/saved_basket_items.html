@@ -1,0 +1,68 @@
+<!--
+Deliverable: Iteration 4
+Version 4.0
+Date: 02/02/2026
+
+Code adapted from existing basket.html code to show items in previous baskets
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Saved Basket Items</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand mb-0">GrocerySaver</a>
+    <div class="d-flex gap-2">
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('saved_baskets') }}">Back</a>
+      <a class="btn btn-sm btn-outline-light" href="{{ url_for('basket') }}">Current Basket</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h3 class="mb-1">{{ basket.name }}</h3>
+  <p class="text-muted mb-3">Retailer: <strong>{{ basket.retailer or "—" }}</strong> | Region: <strong>{{ basket.region or "—" }}</strong></p>
+
+  {% if items|length == 0 %}
+    <p class="text-muted">No items saved in this basket.</p>
+  {% else %}
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in items %}
+        <tr>
+          <td>{{ i.name }}</td>
+          <td>{{ i.quantity }}</td>
+          <td>€{{ "%.2f"|format(i.price) }}</td>
+          <td>€{{ "%.2f"|format(i.price * i.quantity) }}</td>
+          <td class="text-end">
+            <form method="POST" action="{{ url_for('add_saved_item', basket_id=basket.id, product_id=i.product_id) }}">
+              <button class="btn btn-sm btn-success" type="submit">Add to current basket</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+</body>
+</html>
+
+<!-- end of code block for iteration 4 deliverable -->

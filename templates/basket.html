@@ -1,7 +1,7 @@
 <!--
-Deliverable: Iteration 3
-Version 3.0
-Date: 08/01/2026
+Deliverable: Iteration 4
+Version 4.0
+Date: 01/02/2026
 
 code below is adapted from existing code in search.html to display basket
 -->
@@ -14,6 +14,7 @@ code below is adapted from existing code in search.html to display basket
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
+
 <body class="bg-light">
 
 <!-- Navbar -->
@@ -31,10 +32,48 @@ code below is adapted from existing code in search.html to display basket
   </div>
 </nav>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <div class="container mt-5">
 
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-0">Your Basket</h2>
+    <!-- user story 22 - save and load baskets - code aided from ChatGPT see appendix A - Iteration 4 Report -->
+    {% if session.get("guest") %}
+  <div class="alert alert-info mt-3">
+    Guests can’t save baskets or use basket templates. Create an account and log in to use these features.
+  </div>
+{% endif %}
+
+{% if session.get("user_id") and session.get("username") and not session.get("guest") %}
+  <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+    <form method="POST" action="{{ url_for('save_basket') }}" class="d-flex align-items-center gap-2 mb-0">
+      <input type="text" name="basket_name" class="form-control form-control-sm" style="max-width:220px;" placeholder="Name your basket">
+      <button class="btn btn-sm btn-success" type="submit">Save Basket</button>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('saved_baskets') }}">View Saved Baskets</a>
+    </form>
+
+      <!-- user story 23 - use a basket template - Code adapted from user story 22 code above -->
+    <form method="POST" action="{{ url_for('save_template') }}" class="d-flex align-items-center gap-2 mb-0">
+      <input type="text" name="template_name" class="form-control form-control-sm" style="max-width:220px;" placeholder="Template name">
+      <button class="btn btn-sm btn-outline-primary" type="submit">Save Template</button>
+      <a class="btn btn-sm btn-outline-dark" href="{{ url_for('templates') }}">View Templates</a>
+    </form>
+  </div>
+  <hr>
+{% endif %}
+
+
+
+
 
         {% if items|length != 0 %}
         <form method="POST" action="{{ url_for('clear_basket') }}" class="mb-0">
@@ -74,13 +113,13 @@ code below is adapted from existing code in search.html to display basket
                 {% for item in items %}
                     <tr>
                         <td>
-  <div class="d-flex align-items-center gap-2">
-      <span>{{ item.name }}</span>
-      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('substitutes', product_id=item.id) }}">Substitutes</a>
-      <form method="POST" action="{{ url_for('remove_from_basket', product_id=item.id) }}" class="mb-0">
-          <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
-      </form>
-  </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span>{{ item.name }}</span>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('substitutes', product_id=item.id) }}">Substitutes</a>
+                                <form method="POST" action="{{ url_for('remove_from_basket', product_id=item.id) }}" class="mb-0">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                                </form>
+                            </div>
                         </td>
                         <td>{{ item.retailer or "—" }}</td>
                         <td>{{ item.region or "—" }}</td>
@@ -161,9 +200,9 @@ code below is adapted from existing code in search.html to display basket
                     <!-- user story #19 - split store threshold - code adapted from existing code above -->
                     {% if split_best and split_best.missing == 0 %}
                         {% if worth_split %}
-                            <p class="text-success">Split Store Threshold: <strong>More than 15% to be saved, worth split !</strong></p>
+                            <p class="text-success">Split Store Threshold: <strong>More than 25% to be saved, worth split !</strong></p>
                         {% else %}
-                            <p class="text-muted">Split Store Threshold: <strong>Less than 15% to be saved, not worth split</strong></p>
+                            <p class="text-muted">Split Store Threshold: <strong>Less than 25% to be saved, not worth split</strong></p>
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -171,7 +210,7 @@ code below is adapted from existing code in search.html to display basket
             <strong class="text-muted">Split store excludes any fees.</strong>
             </div>
             </div>
-        </div>]
+        </div>
     {% endif %}
 
 
@@ -183,4 +222,4 @@ code below is adapted from existing code in search.html to display basket
 </body>
 </html>
 
-<!-- end of code block for iteration 3 deliverable -->
+<!-- end of code block for iteration 4 deliverable -->
